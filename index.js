@@ -1,17 +1,15 @@
-// Initialize the news api parameters
-let source = 'bbc-news';
-let apikey = '873dc1e667614ee4a83aacf5e858ebed';
-
-// Grab the news card
 let newsCard = document.getElementById('newsCard');
+
+const data = null;
 
 // Create ajax get request
 const xhr = new XMLHttpRequest();
-xhr.open('GET', `https://newsapi.org/v2/top-headlines?sources=${source}&apiKey=${apikey}`, true);
+xhr.withCredentials = true;
 
-// Step after response is ready
-xhr.onload = function () {
-    if (this.status === 200) {
+xhr.addEventListener("readystatechange", function () {
+    if (this.readyState === this.DONE) {
+        // console.log(this.responseText);
+
         let json = JSON.parse(this.responseText);
         let articles = json.articles;
         console.log(articles);
@@ -21,13 +19,12 @@ xhr.onload = function () {
             let news = `<div class="col-md-6">
                             <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                                 <div class="col p-4 d-flex flex-column position-static">
-                                    <strong class="d-inline-block mb-2 text-primary"> ${element["author"]} </strong>
+                                    <strong class="d-inline-block mb-2 text-primary"> ${element["clean_url"]} </strong>
                                     <h3> ${element["title"]} </h3>
-                                    <p class="card-text mb-auto"> ${element["description"]} </p>
-                                    <a href="${element["url"]}" target="_blank" class="stretched-link mt-3">Continue reading</a>
+                                    <a href="${element["link"]}" target="_blank" class="stretched-link mt-3 fs-6">Continue reading</a>
                                 </div>
                                 <div class="col-auto d-none d-lg-block">
-                                    <img src="${element["urlToImage"]}" width="200" height="100%" class="bd-placeholder-img">
+                                    <img src="${element["media"]}" width="200" height="100%" class="bd-placeholder-img">
 
                                 </div>
                             </div>
@@ -35,10 +32,13 @@ xhr.onload = function () {
             newsHtml += news;
         });
         newsCard.innerHTML = newsHtml;
-    }
-    else {
+    } else {
         console.log("Some error occured");
     }
-}
+});
 
-xhr.send();
+xhr.open("GET", "https://newscatcher.p.rapidapi.com/v1/search_free?q=India&lang=en&media=True");
+xhr.setRequestHeader("X-RapidAPI-Host", "newscatcher.p.rapidapi.com");
+xhr.setRequestHeader("X-RapidAPI-Key", "fa1f168a78mshe73bc7f6e543aacp1fbd10jsn94670eb80107");
+
+xhr.send(data);
